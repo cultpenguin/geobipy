@@ -2,7 +2,7 @@
 Class to handle the HDF5 result files for a line of data.
  """
 #from ..base import Error as Err
-from pandas import rolling_mean as rmean
+#from pandas import rolling_mean as rmean
 import numpy as np
 import numpy.ma as ma
 import h5py
@@ -1099,16 +1099,21 @@ class LineResults(myObject):
 
         # Generate the quad node locations in x
         x = np.zeros(self.nPoints + 1)
-        x[:-1] = rmean(self.x, 2)
+        #x[:-1] = rmean(self.x, 2)
+        x[:-1] = self.x.rolling(2).mean()
         x[0] = x[1] - 2 * abs(x[1] - self.x[0])
         x[-1] = x[-2] + 2 * abs(self.x[-1] - x[-2])
 
         y = np.zeros(self.nPoints + 1)
-        y[:-1] = rmean(self.y, 2)
+        #y[:-1] = rmean(self.y, 2)
+        y[:-1] = self.y.rolling(2).mean()
+        
         y[0] = y[1] - 2 * abs(y[1] - self.y[0])
         y[-1] = y[-2] + 2 * abs(self.y[-1] - y[-2])
         e = np.zeros(self.nPoints + 1)
-        e[:-1] = rmean(self.elevation, 2)
+        #e[:-1] = rmean(self.elevation, 2)
+        e[:-1] = self.elevation.rolling(2).mean()
+
         e[0] = e[1] - 2 * (e[1] - self.elevation[0])
         e[-1] = e[-2] + 2 * (self.elevation[-1] - e[-2])
 
